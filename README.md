@@ -39,7 +39,7 @@ RecurrPay is a decentralized platform built on the Fuel Network, enabling users 
 - **Individuals**: Users automating regular payments like bills, subscriptions, or personal transfers.
 - **Fund Distributors**: Entities requiring regular fund disbursements (e.g., FUEL Accelerator Program, Web3 communities,Hackathon Prizes).
 
-## Stellar Integration Details
+## Fuel Integration Details
 - **Fuel TS SDK**: Handles smart contract creation along with its deployment and also integrating smart contract.
 - **Cron Jobs**: Automates recurring payments using scheduled tasks.
 - **Security**: A robust backend ensures secure and authorized access to funds.
