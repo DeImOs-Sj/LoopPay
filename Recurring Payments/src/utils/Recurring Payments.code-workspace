@@ -1,0 +1,13 @@
+{
+  "folders": [
+	{
+		"name": "Recurring Payments",
+		"path": "../.."
+	},
+	{
+		"name": "public",
+		"path": "../../../../soroban/auto-stellar-frontend/public"
+	}
+],
+  "settings": {}
+}

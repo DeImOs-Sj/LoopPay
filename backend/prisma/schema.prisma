@@ -1,0 +1,209 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["omitApi"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  password String?
+
+  stellarAccountId String @unique
+
+  Profile       UserProfile?
+  Organizations UserOrganisations[]
+
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  PayrollEntry PayrollEntry[]
+  Payment      Payment[]
+}
+
+model UserProfile {
+  id     Int @id @default(autoincrement())
+  userId Int @unique
+
+  name   String?
+  avatar String?
+
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Organization {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+
+  stellarAccountId String? @unique
+  orgContractId    String? @unique
+
+  OrgProfile OrgProfile?
+  Users      UserOrganisations[]
+  Payroll    Payroll[]
+  Deposits   Deposit[]
+  Balance    Balance?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrgProfile {
+  id    Int @id @default(autoincrement())
+  orgId Int @unique
+
+  name    String
+  avatar  String?
+  website String?
+
+  organization Organization @relation(fields: [orgId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserOrganisations {
+  id     Int @id @default(autoincrement())
+  userId Int @unique
+  orgId  Int @unique
+
+  user         User         @relation(fields: [userId], references: [id])
+  organisation Organization @relation(fields: [orgId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, orgId])
+}
+
+model Payroll {
+  id             Int    @id @default(autoincrement())
+  name           String
+  organizationId Int
+
+  state                 PayrollState       @default(ACTIVE)
+  paymentType           PayrollPaymentType
+  paymentDate           DateTime           @db.Date
+  paymentDateOfTheMonth Int
+
+  totalAmount Float
+
+  Organization    Organization      @relation(fields: [organizationId], references: [id])
+  PayrollEntry    PayrollEntry[]
+  PayrollInstance PayrollInstance[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PayrollEntry {
+  id Int @id @default(autoincrement())
+
+  payrollId Int
+  userId    Int
+
+  amount Float
+  token  String
+
+  isPaid Boolean   @default(false)
+  paidAt DateTime?
+
+  Payroll Payroll @relation(fields: [payrollId], references: [id])
+  User    User    @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PayrollInstance {
+  id        Int      @id @default(autoincrement())
+  payrollId Int
+  date      DateTime
+
+  status           PayrollInstanceStatus @default(PENDING)
+  amountDisabursed Float                 @default(0)
+
+  Payments Payment[]
+  Payroll  Payroll   @relation(fields: [payrollId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Payment {
+  id Int @id @default(autoincrement())
+
+  userId            Int
+  payrollInstanceId Int
+
+  amount Float
+  status PaymentStatus @default(PENDING)
+  txHash String?
+  paidAt DateTime?
+
+  PayrollInstance PayrollInstance @relation(fields: [payrollInstanceId], references: [id])
+  User            User            @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Balance {
+  id Int @id @default(autoincrement())
+
+  orgId  Int   @unique
+  amount Float @default(0)
+
+  Organization Organization @relation(fields: [orgId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Deposit {
+  id Int @id @default(autoincrement())
+
+  orgId  Int
+  amount Float
+  token  String
+  txHash String @unique
+
+  Organization Organization @relation(fields: [orgId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([orgId, txHash])
+}
+
+enum PayrollState {
+  ACTIVE
+  INACTIVE
+}
+
+enum PayrollPaymentType {
+  RECURRING
+  ONE_TIME
+}
+
+enum PayrollInstanceStatus {
+  PENDING
+  PROCESSING
+  PAID
+  PARTIALLY_PAID
+  FAILED
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  PAID
+  FAILED
+}
