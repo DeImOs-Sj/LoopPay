@@ -20,7 +20,7 @@ export default function HomePage() {
               <Landing />
               <p className="mb-6 text-lg">
                 Easiest way to manage payroll and recurring subscriptions and
-                seamlessly do cross border payments with the poweer of Stellar.
+                seamlessly do cross border payments with the poweer of Fuel.
               </p>
               <Button className="bg-[#062056]">Get Started</Button>
             </div>
@@ -49,7 +49,6 @@ export default function HomePage() {
           <h1 className="mb-4 text-5xl font-bold">What we are doing?</h1>
           <p className="mb-10 max-w-[800px] text-center text-lg text-gray-700">
             Helping the organisations with payrolls and recurring payments.
-            Helping the org. Helping the organisations with payrolls and recu
           </p>
         </div>
         <div className="flex justify-center gap-10 align-middle">
@@ -84,7 +83,7 @@ export default function HomePage() {
               className="self-center"
             /> */}
             <h1 className="mb-2 text-3xl font-bold">
-              Leveraging Stellar Blockchain
+              Leveraging Fuel Blockchain
             </h1>
             <p className="text-lg text-gray-700">
               Ensuring secure and transparent transactions. Enabling multi-token
@@ -128,10 +127,10 @@ export default function HomePage() {
             Finding it tough to manage your employees payroll while paying them
             on crypto?
           </h1>
-          <p className="text-lg">
+          {/* <p className="text-lg">
             Are you also hiring for an underpaid and overworked employee to
             manage your payrolls?
-          </p>
+          </p> */}
         </div>
       </div>
     </div>

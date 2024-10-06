@@ -1,5 +1,5 @@
 import { BN } from "fuels";
-import contractIds from "./sway-api/contract-ids.json";
+import contractIds from "./swap-api/contract-ids.json";
 
 export const environments = { LOCAL: "local", TESTNET: "testnet" };
 export const environment =

@@ -1,8 +1,10 @@
-"use client";
+import { useConnect, useConnectUI, useWallet } from "@fuels/react";
+import { TestContract } from "../swap-api/TestContract";
+import { isLocal, contractId } from "../lib";
 
+import { Address, BN } from "fuels";
 import React, { useEffect, useState } from "react";
 import { Icons } from "@/components/icons";
-import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/hooks/use-toast";
 
 import {
@@ -15,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { cn } from "@/utils/cn";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -34,6 +36,13 @@ import { UserSelectDropdown } from "../components/user/user-select";
 import axiosInstance from "../utils/apis";
 
 const Page = () => {
+  const [contract, setContract] = useState<TestContract>();
+  console.log("contract", contractId);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { connect } = useConnectUI();
+  const { wallet, refetch } = useWallet();
+
   const { toast } = useToast();
 
   const [date, setDate] = React.useState<Date>();
@@ -50,7 +59,16 @@ const Page = () => {
     }[]
   >([{ id: null, amount: "", token: "ETH" }]);
   const [orgUsers, setOrgUsers] = useState<OrgUser[]>([]);
+  const [amount, setAmount] = useState();
   console.log("inputs", userInputs);
+
+  useEffect(() => {
+    if (wallet) {
+      const testContract = new TestContract(contractId, wallet);
+      setContract(testContract);
+    }
+  }, [wallet]);
+
   const handleAddClick = () => {
     setUserInputs([
       ...userInputs,
@@ -61,6 +79,41 @@ const Page = () => {
       },
     ]);
   };
+
+  async function transferFunds() {
+    console.log("hello world");
+    console.log("wallet", wallet);
+    console.log("contract", contract);
+    console.log("address", amount);
+    // if (!wallet || !contract || !transferAmount || !address) return;
+    const BASE_ASSET_ID =
+      "0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07";
+    try {
+      console.log("hello world2");
+      const a = Address.fromString(
+        "0xaa23536ca3014e3e297a7180701ed0e937aa8695d59b123c3ff6382d305d06c2"
+      );
+      await contract?.functions
+        .transfer(
+          {
+            bits: "0xaa23536ca3014e3e297a7180701ed0e937aa8695d59b123c3ff6382d305d06c2",
+          },
+          { bits: BASE_ASSET_ID },
+          111
+        )
+        .callParams({
+          forward: [new BN(amount), BASE_ASSET_ID],
+          gasLimit: new BN(1000000),
+        })
+        .call();
+
+      console.log(`Transferred ${amount} units successfully`);
+    } catch (error) {
+      console.error("Error transferring funds:", error);
+    }
+
+    setIsLoading(false);
+  }
 
   const handleInputChange = (
     index: number,
@@ -73,45 +126,7 @@ const Page = () => {
       )
     );
   };
-
-  // const handleSubmit = async () => {
-  //   const formattedDate = date?.toISOString();
-  //   const users = userInputs.map((input) => ({
-  //     id: input.id,
-  //     amount: Number(input.amount),
-  //     token: input.token,
-  //   }));
-  //   console.log("users", users);
-  //   const payload = {
-  //     name: payrollName,
-  //     paymentType: paymentType,
-  //     paymentDate: formattedDate,
-  //     users: users,
-  //   };
-  //   console.log("payload", payload);
-  //   try {
-  //     const response = await axiosInstance.post("/payroll", payload, {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //       },
-  //     });
-
-  //     console.log("Payroll created:", response.data);
-  //     toast({
-  //       title: "Success",
-  //       description: "Payroll created successfully!",
-  //     });
-  //   } catch (error) {
-  //     console.error("Error creating payroll:", error);
-  //     toast({
-  //       variant: "destructive",
-  //       title: "Uh oh! Something went wrong.",
-  //       description: "There was a problem with your request.",
-  //       action: <ToastAction altText="Try again">Try again</ToastAction>,
-  //     });
-  //   }
-  // };
+  console.log("inputs", amount);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -209,10 +224,8 @@ const Page = () => {
               className="w-[30rem]"
               placeholder="Enter Amount Payable"
               type="number"
-              value={input.amount}
-              onChange={(e) =>
-                handleInputChange(index, "amount", parseFloat(e.target.value))
-              }
+              value={amount}
+              onChange={(e) => setAmount(Number(e.target.value))}
             />
 
             <DropdownMenu>
@@ -239,12 +252,12 @@ const Page = () => {
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button onClick={handleAddClick}>
+            <Button onClick={transferFunds}>
               <Icons.add />
             </Button>
           </div>
         ))}
-        <Button>Create Payroll</Button>
+        <Button onClick={transferFunds}>Create Payroll</Button>
       </DashboardLayout>
     </>
   );

@@ -10,7 +10,7 @@ import {
 } from "../ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { ChevronsUpDown, Check } from "lucide-react";
-import { TestContract } from "../../sway-api";
+import { TestContract } from "../../swap-api/TestContract";
 import { contractId } from "../../lib";
 import { useConnectUI, useWallet } from "@fuels/react";
 import { BN } from "fuels";
