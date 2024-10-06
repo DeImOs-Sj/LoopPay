@@ -35,7 +35,7 @@ import { getOrganizationUsers, type OrgUser } from "@/apis/organization";
 import { UserSelectDropdown } from "../components/user/user-select";
 import axiosInstance from "../utils/apis";
 
-const Page = () => {
+const OrganizationPayroll = () => {
   const [contract, setContract] = useState<TestContract>();
   console.log("contract", contractId);
   const [isLoading, setIsLoading] = useState(false);
@@ -100,6 +100,41 @@ const Page = () => {
           },
           { bits: BASE_ASSET_ID },
           111
+        )
+        .callParams({
+          forward: [new BN(amount), BASE_ASSET_ID],
+          gasLimit: new BN(1000000),
+        })
+        .call();
+
+      console.log(`Transferred ${amount} units successfully`);
+    } catch (error) {
+      console.error("Error transferring funds:", error);
+    }
+
+    setIsLoading(false);
+  }
+
+  async function RecurringPayment() {
+    console.log("hello world");
+    console.log("wallet", wallet);
+    console.log("contract", contract);
+    console.log("address", amount);
+    // if (!wallet || !contract || !transferAmount || !address) return;
+    const BASE_ASSET_ID =
+      "0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07";
+    try {
+      console.log("hello world2");
+      Address.fromString(
+        "0xaa23536ca3014e3e297a7180701ed0e937aa8695d59b123c3ff6382d305d06c2"
+      );
+      await contract?.functions
+        .setup_recurring_payment(
+          {
+            bits: "0xaa23536ca3014e3e297a7180701ed0e937aa8695d59b123c3ff6382d305d06c2",
+          },
+          111,
+          5000
         )
         .callParams({
           forward: [new BN(amount), BASE_ASSET_ID],
@@ -225,7 +260,7 @@ const Page = () => {
               placeholder="Enter Amount Payable"
               type="number"
               value={amount}
-              onChange={(e) => setAmount(Number(e.target.value))}
+              // onChange={(e) => setAmount(Number(e.target.value))}
             />
 
             <DropdownMenu>
@@ -257,10 +292,13 @@ const Page = () => {
             </Button>
           </div>
         ))}
-        <Button onClick={transferFunds}>Create Payroll</Button>
+        <div className="flex justify-center gap-6">
+          <Button onClick={RecurringPayment}>Create One Time Payroll</Button>
+          <Button onClick={transferFunds}>Create Recurring Payroll</Button>
+        </div>
       </DashboardLayout>
     </>
   );
 };
 
-export default Page;
+export default OrganizationPayroll;

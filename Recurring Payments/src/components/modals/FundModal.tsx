@@ -68,13 +68,14 @@ const FundModal = () => {
     const ethID =
       "0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07";
     if (!wallet || !contract || !amount) return;
+    // const usd = (amount / 2800) * 1000000;
 
     setIsLoading(true);
     try {
       await contract.functions
         .deposit_funds()
         .callParams({
-          forward: [amount, ethID], // Specify the amount and asset to send
+          forward: [(amount / 2800) * 1000000, ethID], // Specify the amount and asset to send
           gasLimit: new BN(1000000), // Gas limit (adjust if needed)
         })
         .call();

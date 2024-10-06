@@ -95,7 +95,7 @@ export const columns: ColumnDef<Deposit>[] = [
     header: "txHash",
     cell: ({ row }) => {
       const txHash: string = row.getValue("txHash");
-No
+
       <div className="text-right font-medium">
         <Link
           to={`https://horizon-testnet.stellar.org/transactions/${txHash}`}

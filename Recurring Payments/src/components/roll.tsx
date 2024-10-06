@@ -14,7 +14,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 // import { Checkbox } from "@/app/components/ui/checkbox";
 import {
@@ -175,7 +175,7 @@ export function DataTable() {
                 Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="">
+            <DropdownMenuContent align="start">
               {table
                 .getAllColumns()
                 .filter((column) => column.getCanHide())
@@ -193,9 +193,9 @@ export function DataTable() {
                 ))}
             </DropdownMenuContent>
           </DropdownMenu>
-          <a href="/organization-payroll">
+          <Link to="/organization-payroll">
             <Button>Create Payroll</Button>
-          </a>
+          </Link>
         </div>
         <div className="rounded-md border">
           <Table>
