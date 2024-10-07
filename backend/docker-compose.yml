@@ -19,7 +19,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=secret
-      - POSTGRES_DB=d2
+      - POSTGRES_DB=db3
     ports:
       - '5432:5432'
     volumes:

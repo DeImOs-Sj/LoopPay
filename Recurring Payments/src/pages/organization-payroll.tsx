@@ -96,7 +96,7 @@ const OrganizationPayroll = () => {
       await contract?.functions
         .transfer(
           {
-            bits: "0xaa23536ca3014e3e297a7180701ed0e937aa8695d59b123c3ff6382d305d06c2",
+            bits: address,
           },
           { bits: BASE_ASSET_ID },
           111
@@ -125,13 +125,11 @@ const OrganizationPayroll = () => {
       "0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07";
     try {
       console.log("hello world2");
-      Address.fromString(
-        "0xaa23536ca3014e3e297a7180701ed0e937aa8695d59b123c3ff6382d305d06c2"
-      );
+      Address.fromString(adddress);
       await contract?.functions
         .setup_recurring_payment(
           {
-            bits: "0xaa23536ca3014e3e297a7180701ed0e937aa8695d59b123c3ff6382d305d06c2",
+            bits: address,
           },
           111,
           5000
