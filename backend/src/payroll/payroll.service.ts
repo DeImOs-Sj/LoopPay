@@ -6,14 +6,13 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { CreatePayrollDTO } from './dto/create-payroll.dto';
-import { StellarService } from 'src/stellar/stellar.service';
 import { Payroll } from '@prisma/client';
 
 @Injectable()
 export class PayrollService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly stellarService: StellarService,
+    private readonly Service: Service,
   ) {}
 
   async create({
@@ -288,10 +287,10 @@ export class PayrollService {
       });
 
       // Make payments on-chain
-      const paymentResult = await this.stellarService.transferMultipleFunds({
+      const paymentResult = await this.Service.transferMultipleFunds({
         accounts: pendingPayments.map((payment) => ({
           amount: payment.amount,
-          destinationAccount: payment.User.stellarAccountId,
+          destinationAccount: payment.User.AccountId,
         })),
         memoText: `${payrollInstanceId}`,
       });

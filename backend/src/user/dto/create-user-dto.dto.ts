@@ -5,7 +5,7 @@ export class CreateUserDTO {
   email: string;
 
   @IsString()
-  stellarAccountId: string;
+  AccountId: string;
 
   @IsString()
   name: string;

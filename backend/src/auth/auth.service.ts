@@ -9,7 +9,7 @@ import { CreateUserDTO } from 'src/user/dto/create-user-dto.dto';
 import { CreateOrgDTO } from 'src/organization/dto/create-org.dto';
 
 class VerifyDTO {
-  stellarAccoundId: string;
+  AccoundId: string;
   signature: string;
   data: string;
   walletAddress: string;
@@ -25,7 +25,7 @@ export class AuthService {
 
   async validateSignature({
     data,
-    stellarAccoundId,
+    AccoundId,
     signature,
     walletAddress,
   }: VerifyDTO): Promise<boolean> {
@@ -33,7 +33,7 @@ export class AuthService {
       e: 'AQAB',
       ext: true,
       kty: 'RSA',
-      n: stellarAccoundId,
+      n: AccoundId,
     };
 
     const hash = await crypto.subtle.digest(
@@ -66,8 +66,8 @@ export class AuthService {
     return isValidSignature && decoded === walletAddress;
   }
 
-  async getUser(stellarAccountId: string): Promise<AuthUser> {
-    const user = await this.usersService.findByStellarId(stellarAccountId);
+  async getUser(AccountId: string): Promise<AuthUser> {
+    const user = await this.usersService.findById(AccountId);
 
     if (!user) {
       throw new BadRequestException('User does not exist');
@@ -79,17 +79,17 @@ export class AuthService {
   async createUser({
     email,
     name,
-    stellarAccountId,
+    AccountId,
     avatar,
   }: CreateUserDTO): Promise<AuthUser> {
-    const user = await this.usersService.findByStellarId(stellarAccountId);
+    const user = await this.usersService.findById(AccountId);
 
     if (user) {
       throw new BadRequestException('User already exists');
     }
 
     const newUser = await this.usersService.create({
-      stellarAccountId,
+      AccountId,
       email,
       name,
       avatar,

@@ -51,7 +51,7 @@ export class OrganizationService {
       select: {
         id: true,
         email: true,
-        stellarAccountId: true,
+        AccountId: true,
         orgContractId: true,
         createdAt: true,
         updatedAt: true,
@@ -83,7 +83,7 @@ export class OrganizationService {
       select: {
         id: true,
         email: true,
-        stellarAccountId: true,
+        AccountId: true,
         orgContractId: true,
         createdAt: true,
         updatedAt: true,
@@ -130,7 +130,7 @@ export class OrganizationService {
     id: number,
   ): Promise<Pick<
     AuthOrganization,
-    'id' | 'email' | 'stellarAccountId' | 'type'
+    'id' | 'email' | 'AccountId' | 'type'
   > | null> {
     const org = await this.prisma.organization.findUnique({
       where: {
@@ -139,7 +139,7 @@ export class OrganizationService {
       select: {
         id: true,
         email: true,
-        stellarAccountId: true,
+        AccountId: true,
       },
     });
 
@@ -150,12 +150,10 @@ export class OrganizationService {
     return { ...org, type: 'ORGANIZATION' };
   }
 
-  async findByStellarAccountId(
-    stellarAccountId: string,
-  ): Promise<Organization | undefined> {
+  async findByAccountId(AccountId: string): Promise<Organization | undefined> {
     const org = await this.prisma.organization.findUnique({
       where: {
-        stellarAccountId,
+        AccountId,
       },
     });
 
@@ -198,7 +196,7 @@ export class OrganizationService {
           select: {
             id: true,
             email: true,
-            stellarAccountId: true,
+            AccountId: true,
             Profile: {
               select: {
                 name: true,

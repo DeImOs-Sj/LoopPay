@@ -9,7 +9,7 @@ export type AuthType =
 export class UserSignUpDTO {
   @IsString({})
   authType: 'USER_SIGNUP';
-  stellarAccountId: string;
+  AccountId: string;
   email: string;
   name: string;
   avatar: string | null;
@@ -21,7 +21,7 @@ export class UserSignUpDTO {
 
 export class UserSignInDTO {
   authType: 'USER_SIGNIN';
-  stellarAccountId: string;
+  AccountId: string;
 
   // Passport Requirement
   x: string;

@@ -7,8 +7,8 @@ async function bootstrap() {
   app.enableCors();
 
   const config = new DocumentBuilder()
-    .setTitle('AutoStellar API')
-    .setDescription('Auto Stellar API description')
+    .setTitle('Auto API')
+    .setDescription('Auto  API description')
     .setVersion('1.0')
     .addTag('learn-ao')
     .addBearerAuth(

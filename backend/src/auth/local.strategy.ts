@@ -46,7 +46,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
     if (authType === 'USER_SIGNUP') {
       const user = await this.authService.createUser({
-        stellarAccountId: body.stellarAccountId,
+        AccountId: body.AccountId,
         email: body.email,
         name: body.name,
         avatar: body.avatar,
@@ -54,7 +54,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
       return user;
     } else if (authType === 'USER_SIGNIN') {
-      const user = await this.authService.getUser(body.stellarAccountId);
+      const user = await this.authService.getUser(body.AccountId);
 
       return user;
     } else if (authType === 'ORG_SIGNUP') {

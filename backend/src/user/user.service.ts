@@ -11,14 +11,14 @@ export class UserService {
 
   async create({
     email,
-    stellarAccountId,
+    AccountId,
     name,
     avatar,
   }: CreateUserDTO): Promise<User> {
     const newUser = await this.prisma.user.create({
       data: {
         email,
-        stellarAccountId,
+        AccountId,
         Profile: {
           create: {
             name,
@@ -39,7 +39,7 @@ export class UserService {
       select: {
         id: true,
         email: true,
-        stellarAccountId: true,
+        AccountId: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -96,10 +96,7 @@ export class UserService {
 
   async findByIdForReq(
     id: number,
-  ): Promise<Pick<
-    AuthUser,
-    'id' | 'email' | 'stellarAccountId' | 'type'
-  > | null> {
+  ): Promise<Pick<AuthUser, 'id' | 'email' | 'AccountId' | 'type'> | null> {
     const user = await this.prisma.user.findUnique({
       where: {
         id,
@@ -107,7 +104,7 @@ export class UserService {
       select: {
         id: true,
         email: true,
-        stellarAccountId: true,
+        AccountId: true,
       },
     });
 
@@ -118,10 +115,10 @@ export class UserService {
     return { ...user, type: 'USER' };
   }
 
-  async findByStellarId(stellarAccountId: string): Promise<User | undefined> {
+  async findById(AccountId: string): Promise<User | undefined> {
     const user = await this.prisma.user.findUnique({
       where: {
-        stellarAccountId,
+        AccountId,
       },
     });
 

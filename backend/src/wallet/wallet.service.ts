@@ -1,12 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { StellarService } from 'src/stellar/stellar.service';
 import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class WalletService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly stellarService: StellarService,
+    private readonly Service: Service,
   ) {}
 
   async getOrgDeposits({ orgId }: { orgId: number }) {
@@ -26,7 +25,7 @@ export class WalletService {
       },
       select: {
         id: true,
-        stellarAccountId: true,
+        AccountId: true,
         Balance: {
           select: {
             id: true,
@@ -36,22 +35,13 @@ export class WalletService {
       },
     });
 
-    const opData = await StellarService.getTxnOperations({
+    const opData = await Service.getTxnOperations({
       txHash,
     });
 
     if (!opData.transaction_successful) {
       throw new BadRequestException('Transaction failed');
     }
-
-    // TODO: Fix
-    // if (opData.from !== org.stellarAccountId) {
-    //   throw new BadRequestException('Transaction sent from wrong account');
-    // }
-
-    // if (opData.to !== this.stellarService.stellarAccountId) {
-    //   throw new BadRequestException('Transaction sent to wrong account');
-    // }
 
     if (opData.type !== 'payment') {
       throw new BadRequestException('Operation not of type payment');
